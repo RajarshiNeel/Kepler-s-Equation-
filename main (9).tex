@@ -1,0 +1,1039 @@
+\documentclass[12pt]{article}
+
+% ---------------- PACKAGES ----------------
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{xcolor}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage[table]{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    urlcolor=blue!60!black
+}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, calc, positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ---------------- COLORS ----------------
+\definecolor{deepblue}{RGB}{20,40,110}
+
+% ---------------- FONTS ----------------
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\newfontfamily\titlefont{Libre Baskerville}
+
+% ---------------- HEADER / FOOTER ----------------
+\usepackage{fancyhdr}
+\setlength{\headheight}{18pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{deepblue} Olympiad Handout}
+\fancyhead[R]{\small\color{deepblue} Kepler's Equation}
+\fancyfoot[C]{\small Rajarshi Das Gupta \;|\; \thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0.6pt}
+
+% ---------------- SPACING ----------------
+\usepackage{setspace}
+\setstretch{1.45}
+
+% ---------------- SECTION STYLE ----------------
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries\color{deepblue}}{{\thesection}}{0.8em}{}%
+  [\vspace{-0.3em}\rule{\linewidth}{0.5pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{deepblue}}
+  {\thesubsection}{0.8em}{}
+
+% ---------------- BOXES ----------------
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+
+\newenvironment{keyeq}{%
+  \begin{tcolorbox}[
+    enhanced, colback=blue!4!white, colframe=deepblue,
+    boxrule=0.8pt, arc=4pt
+  ]\centering
+}{\end{tcolorbox}}
+
+\newenvironment{notebox}[1]{%
+  \begin{tcolorbox}[
+    enhanced, breakable,
+    colback=blue!3!white, colframe=deepblue,
+    boxrule=0.7pt, arc=4pt,
+    title={\bfseries #1}
+  ]
+}{\end{tcolorbox}}
+
+\newenvironment{probbox}[2]{%
+  \begin{tcolorbox}[
+    enhanced, breakable,
+    colback=blue!5!white, colframe=deepblue,
+    boxrule=0.8pt, arc=4pt,
+    title={\bfseries [#1] Problem #2}
+  ]
+}{\end{tcolorbox}}
+
+
+% license 
+
+\usepackage[
+    type={CC},
+    modifier={by-nc-nd},
+    version={4.0},
+]{doclicense}
+
+\usepackage{hyperref}
+
+\hypersetup{
+    pdftitle={Keplar's Equation},
+    pdfauthor={Rajarshi Das Gupta},
+    pdfkeywords={LaTeX, Note, Copyright},
+    pdfdisplaydoctitle=true,
+    pdfstartview=FitH
+}
+
+% ===============================================================
+\begin{document}
+
+% ================= PAGE 1: COVER =================
+\begin{titlepage}
+\begin{center}
+
+\vspace*{2cm}
+
+{\small\scshape\color{deepblue} OLYMPIAD HANDOUT}
+
+\vspace{2cm}
+
+{\titlefont\fontsize{42}{44}\selectfont\bfseries\color{deepblue} Kepler's Equation}
+
+\vspace{0.8cm}
+
+{\large The Unsolvable Equation of Celestial Mechanics}
+
+\vspace{1cm}
+\rule{0.35\textwidth}{0.5pt}
+
+\vspace{2cm}
+
+{\large \textbf{Rajarshi Das Gupta}}
+
+\vspace{0.3cm}
+
+\vspace{2.5cm}
+
+% ---------- QUOTE ----------
+\begin{minipage}{0.7\textwidth}
+\centering
+\itshape
+``I much prefer the sharpest criticism of a single intelligent man to the thoughtless approval of the masses.''\\[0.3cm]
+--- Johannes Kepler
+\end{minipage}
+
+\vfill
+
+{\small \today}
+
+\end{center}
+\end{titlepage}
+
+
+% ================= PAGE 2: CONTENTS =================
+\newpage
+
+\begin{center}
+{\Large\bfseries\color{deepblue} Contents}
+\end{center}
+
+\vspace{0.8cm}
+
+\begin{center}
+\begin{tabular}{|p{0.75\textwidth}|c|}
+\hline
+
+\rowcolor{deepblue}
+\color{white}\textbf{Topics} & \color{white}\textbf{Page} \\
+\hline
+
+\textbf{1. Introduction} & 1 \\
+\hline
+
+\textbf{2. Geometry of the Ellipse} & 2 \\
+\quad 2.1 Definition and Parameters & 2 \\
+\quad 2.2 Focus and Eccentricity & 3 \\
+\hline
+
+\textbf{3. Auxiliary Circle} & 4 \\
+\quad 3.1 Construction & 4 \\
+\quad 3.2 Relation to Ellipse & 5 \\
+\hline
+
+\textbf{4. Area Law and Derivation} & 6 \\
+\quad 4.1 Kepler’s Second Law & 6 \\
+\quad 4.2 Area Calculation & 7 \\
+\hline
+
+\textbf{5. Kepler's Equation} & 8 \\
+\hline
+
+\textbf{6. Solving the Equation} & 9 \\
+\quad 6.1 Iterative Methods & 9 \\
+\quad 6.2 Convergence Issues & 10 \\
+\hline
+
+\textbf{7. Numerical Methods} & 11 \\
+\quad 7.1 Newton-Raphson Method & 11 \\
+\quad 7.2 Series Expansion & 12 \\
+\hline
+
+\textbf{8. Applications in Astronomy} & 13 \\
+\hline
+
+\textbf{9. Practice Problems} & 14 \\
+\hline
+
+\end{tabular}
+\end{center}
+\newpage
+
+
+% ================= PAGE 3+: YOUR DOCUMENT STARTS =================
+
+
+
+
+
+% ================================================================
+\section{Introduction}
+% ================================================================
+
+We all know about Kepler's laws from our physics textbooks. But apart from giving
+these three laws, Johannes Kepler is also known for deriving a remarkable equation
+for analysing the motion of heavenly bodies, now known as \textbf{Kepler's Equation}.
+
+Kepler's laws established that planets orbit in ellipses with the Sun at one focus,
+that the radius vector sweeps equal areas in equal times, and that the orbital period
+relates to orbital size. Yet these laws left one question unanswered: given an orbit
+and an elapsed time, \emph{where exactly is the planet?} The non-uniform speed along
+the ellipse means no simple formula expresses position as a function of time.
+Kepler's Equation is the mathematical bridge that resolves this.
+
+This article derives the equation from first principles using only Kepler's Second
+Law and the geometry of the ellipse. The central tool is the \emph{auxiliary circle},
+which reduces area calculations inside an ellipse to the simpler geometry of a circle.
+Once derived, we explore the equation's transcendental nature and study the principal
+numerical methods used to solve it in practice.
+
+% ================================================================
+\section{Geometry of Elliptical Orbits}
+% ================================================================
+
+\subsection{The Ellipse and Its Parameters}
+
+An ellipse is characterised by its \textbf{semi-major axis} $a$ (the longer half-axis)
+and its \textbf{semi-minor axis} $b$ (the shorter half-axis), related to the
+\textbf{eccentricity} $e \in [0,1)$ by
+\[
+  b^2 = a^2(1 - e^2).
+\]
+When $e = 0$ the ellipse is a circle; as $e \to 1$ it becomes increasingly elongated.
+The Earth has orbital eccentricity $e \approx 0.017$; Halley's Comet has orbital
+eccentricity $e \approx 0.967$.
+
+The two \textbf{foci} lie on the major axis at distance $ae$ from the centre $C$.
+The Sun occupies one focus $F$. The closest orbital point to $F$ is the
+\textbf{periapsis} at distance $a(1-e)$; the farthest is the \textbf{apoapsis}
+at distance $a(1+e)$.
+
+% ================================================================
+\subsection{The Three Anomalies}
+% ================================================================
+
+To specify where a body is on its orbit, astronomers define angular quantities called
+\textbf{anomalies}. The word comes from the Greek \emph{anomalia} (irregularity),
+reflecting that planetary positions do not advance uniformly. Three anomalies are
+used, shown together in Figure~1.
+
+\vspace{0.4cm}
+% ---- FIGURE 1 : signature diagram ----------------------------
+\begin{center}
+\begin{tikzpicture}[>=Stealth, line cap=round, line join=round, scale=1.15]
+  % a=4, b=2.5, e=0.7, c=2.8
+  % F at origin; C at (-2.8,0)
+  % E=65 deg: P'=(-1.109, 3.625), P=(-1.109, 2.266)
+  \coordinate (F)   at (0,      0);
+  \coordinate (C)   at (-2.8,   0);
+  \coordinate (Per) at (1.2,    0);
+  \coordinate (Apo) at (-6.8,   0);
+  \coordinate (Pp)  at (-1.109, 3.625);
+  \coordinate (P)   at (-1.109, 2.266);
+  \coordinate (Px)  at (-1.109, 0);
+
+  \draw[->, gray!50] (-8.0,0)    -- (2.6,0)    node[right,font=\small]{$x$};
+  \draw[->, gray!50] (-2.8,-3.0) -- (-2.8,3.5) node[above,font=\small]{$y$};
+
+  \draw[thick, blue]     (C) ellipse [x radius=4, y radius=2.5];
+  \draw[dashed, gray!60] (C) circle  [radius=4];
+
+  \draw[dashed, gray!45] (Pp) -- (Px);
+  \draw[thick, blue!55]  (C)  -- (Pp);
+  \draw[thick, red!80]   (F)  -- (P);
+
+  \fill[orange]  (F)  circle (3pt)   node[below right,font=\small]{$F$};
+  \fill[black]   (C)  circle (2pt)   node[below left, font=\small]{$C$};
+  \fill[blue!65] (Pp) circle (2.5pt) node[above right,font=\small]{$P'$};
+  \fill[red!80]  (P)  circle (2.5pt) node[right,      font=\small]{$P$};
+
+  \node[below right,font=\small] at (Per) {Periapsis};
+  \node[below left, font=\small] at (Apo) {Apoapsis};
+
+  \draw[|<->|] (C) -- (Per)            node[midway,fill=white,inner sep=1pt]{$a$};
+  \draw[|<->|] (C) -- (-2.8, 2.5)      node[midway,left]{$b$};
+  \draw[|<->|] (-2.8,-0.65)--(0,-0.65) node[midway,above]{$ae$};
+
+  \draw[->, red!80, thick] (0.8,0)
+      arc [start angle=0, end angle=120, radius=0.8];
+  \node[red!80,font=\small] at (32:1.1) {$\nu$};
+
+  \draw[->, blue!55, thick] (-2.8+1.0,0)
+      arc [start angle=0, end angle=65, radius=1.0];
+  \node[blue!55,font=\small] at (-2.8+0.62,0.55) {$E$};
+
+  \draw[<->, gray!55, very thin]
+      ($(P)+(0.22,0)$) -- ($(Pp)+(0.22,0)$)
+      node[midway,right,font=\tiny,gray!55]{same $x$};
+\end{tikzpicture}
+
+\vspace{0.2cm}
+{\small\textit{Figure~1: Elliptical orbit showing $\nu$ (red, at $F$),
+$E$ (blue, at $C$), and the auxiliary circle (dashed). \\
+Note: You can find an interective version of this diagram at  \href{https://rajarshineel.github.io/Anomalies-in-Ellipse/}{https://rajarshineel.github.io/Anomalies-in-Ellipse/}}}
+\end{center}
+
+\vspace{0.4cm}
+
+\noindent
+\textbf{True Anomaly $\nu$} is the angle at the focus $F$ from the periapsis direction
+to the body $P$, measured in the direction of motion. It is the physically observable
+position angle but grows \emph{non-uniformly} in time: fast near periapsis, slow near
+apoapsis. No closed formula gives $\nu$ as a function of $t$ directly.
+
+\bigskip\noindent
+\textbf{Eccentric Anomaly $E$} is defined via the auxiliary circle (radius $a$,
+centred at $C$). The body at $P$ is projected vertically onto the auxiliary circle
+to give $P'$; the central angle $\angle P'CA$ is $E$. It is the key geometric
+intermediary: any area in the ellipse equals $b/a$ times the corresponding area in
+the auxiliary circle.
+\newpage
+\bigskip\noindent
+\textbf{Mean Anomaly $M$} is defined as $M = 2\pi t/T$. It grows \emph{uniformly}
+with time and is trivially computable from $t$, but does not directly locate the body
+on the ellipse. Kepler's Equation converts $M$ into $E$, from which $\nu$ follows.
+
+\vspace{0.5cm}
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{llll}
+  \toprule
+  \textbf{Anomaly} & \textbf{Symbol} & \textbf{Measured at} & \textbf{Nature} \\
+  \midrule
+  Mean Anomaly      & $M$ & Fictitious (from time)   & Uniform in time \\
+  Eccentric Anomaly & $E$ & Centre $C$, aux.\ circle & Geometric intermediary \\
+  True Anomaly      & $\nu$ & Focus $F$              & Physical (non-uniform) \\
+  \bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.5cm}
+% ================================================================
+\section{Derivation of Kepler's Equation}
+% ================================================================
+
+\subsection{Kepler's Second Law and the Area--Time Relation}
+
+The derivation rests on Kepler's Second Law: \\
+
+\begin{notebox}{Kepler's Second Law}
+{\textit{The radius vector from the focus to the planet sweeps out equal areas
+in equal intervals of time.}}
+\end{notebox}
+\vspace{0.2cm}
+\noindent
+
+This follows from conservation of angular momentum in any central-force field.
+Its practical consequence is that tracking area is equivalent to tracking time.
+
+Let $T$ be the orbital period and $t$ the elapsed time since periapsis. Since the
+total ellipse area is $\pi ab$ and swept area is proportional to time:
+\[
+  \frac{A}{\pi ab} = \frac{t}{T}
+  \qquad\Longrightarrow\qquad
+  A = \pi ab \cdot \frac{t}{T}.
+\]
+Figure~2 illustrates the swept area $A$.
+\newpage
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tikzpicture}[scale=1.15]
+  \coordinate (C)  at (0,      0);
+  \coordinate (F)  at (2.4,    0);
+  \coordinate (P0) at (4.0,    0);
+  \coordinate (P)  at (-1.368, 2.349);
+
+  \fill[orange!35]
+    (F) -- (P0)
+    arc [start angle=0, end angle=110, x radius=4, y radius=2.5]
+    -- cycle;
+
+  \draw[thick, blue] (C) ellipse [x radius=4, y radius=2.5];
+  \draw[thick, black!80] (F) -- (P0);
+  \draw[thick, black!80] (F) -- (P);
+
+  \fill[orange]  (F)  circle (2.5pt) node[below right,font=\small]{$F$};
+  \fill[black]   (P0) circle (2.0pt) node[below right,font=\small]{$P_0$ (periapsis)};
+  \fill[blue!80] (P)  circle (2.0pt) node[above left, font=\small]{$P$ (body)};
+  \node[font=\normalsize] at (1.6, 1.3) {$A$};
+\end{tikzpicture}
+
+\vspace{0.2cm}
+{\small\textit{Figure~2: Swept area $A$ from periapsis.}}
+\end{center}
+
+\subsection{Introducing the Mean Anomaly}
+
+Replace $t$ with $M = 2\pi t/T$, growing at constant rate from $0$ to $2\pi$.
+The area--time relation becomes:
+\[
+  A = \frac{ab}{2}\,M. \tag{1}
+\]
+This is the first expression for $A$, linear in time. We now derive a second,
+geometric expression for $A$ in terms of $E$, then equate the two.
+
+\subsection{The Auxiliary Circle and Area Scaling}
+
+The auxiliary circle (radius $a$, centred at $C$) is related to the ellipse by a
+uniform vertical compression. Any circle point $(x,\,y_{\text{circle}})$ maps to
+the ellipse point $(x,\,y_{\text{ellipse}})$ with
+\[
+  y_{\text{ellipse}} = \frac{b}{a}\,y_{\text{circle}}.
+\]
+Since every vertical strip scales by $b/a$, every ellipse area equals the
+corresponding circle area scaled by $b/a$:
+\[
+  A_{\text{ellipse}} = \frac{b}{a}\,A_{\text{circle}}. \tag{2}
+\]
+
+\newpage
+\subsection{Area in the Auxiliary Circle: Sector Minus Triangle}
+
+The area swept in the auxiliary circle from periapsis $A$ to the projected point
+$P'$ is sector $CAP'$ minus triangle $CFP'$ (Figure~3).
+\vspace{0.4cm}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.35]
+  \coordinate (C)  at (0,      0);
+  \coordinate (F)  at (-1.664, 0);
+  \coordinate (A)  at (3.2,    0);
+  \coordinate (Pp) at (1.835,  2.621);
+  \coordinate (P)  at (1.835,  2.197);
+  \coordinate (N)  at (1.835,  0);
+
+  \fill[blue!55]
+    (C) -- (A)
+    arc [start angle=0, end angle=55, radius=3.2]
+    -- cycle;
+  \fill[red!55] (C) -- (F) -- (Pp) -- cycle;
+
+  \draw[thick, gray!55, dashed] (C) circle [radius=3.2];
+  \draw[thick, blue!80] (C) ellipse [x radius=3.2, y radius=2.681];
+
+  \draw[thick, black!70] (C)  -- (A);
+  \draw[thick, black!70] (C)  -- (Pp);
+  \draw[thick, red!80]   (F)  -- (Pp);
+  \draw[dashed, gray!60] (Pp) -- (N);
+  \draw[dashed, gray!60] (P)  -- (N);
+
+  \fill[black]     (C)  circle (2.5pt) node[below left, font=\small]{$C$};
+  \fill[orange!90] (F)  circle (2.5pt) node[below,      font=\small]{$F$};
+  \fill[black]     (Pp) circle (2.5pt) node[above right,font=\small]{$P'$};
+  \fill[blue!80]   (P)  circle (2.5pt) node[right,      font=\small]{$P$};
+  \fill[black]     (A)  circle (2pt)   node[below right,font=\small]{$A$};
+  \fill[gray!70]   (N)  circle (1.8pt) node[below,      font=\small]{$N$};
+
+  \draw[->, thick, black!70] (0.95,0)
+      arc [start angle=0, end angle=55, radius=0.95];
+  \node[font=\small, black] at (28:1.25) {$E$};
+
+  \draw[|<->|,thick, black!70] (0,-0.58) -- (-1.664,-0.58)
+      node[midway, below, font=\small, black!70]{$ae$};
+  \draw[|<->|,thick, red!65] ($(Pp)+(0.42,0)$) -- ($(N)+(0.42,0)$)
+      node[midway, left , font=\small,thick, red!65]{$a\sin E$};
+
+\fill[red!55]   (4.1, 1.85) rectangle (4.55, 2.30);
+  \draw[gray!60]  (4.1, 1.85) rectangle (4.55, 2.30);
+  \node[right, font=\small, red!70!black] at (4.62, 2.07)
+      {Triangle $CFP' = \tfrac{1}{2}a^2 e\sin E$};
+
+  \fill[blue!55]  (4.1, 2.55) rectangle (4.55, 3.00);
+  \draw[gray!60]  (4.1, 2.55) rectangle (4.55, 3.00);
+  \node[right, font=\small, blue!70!black] at (4.62, 2.77)
+      {Sector $CAP' = \tfrac{1}{2}a^2 E$};
+
+  
+
+  \node[font=\small, align=left, black] at (5.30, 1.20)
+      {Swept area $= \tfrac{1}{2}a^2(E - e\sin E)$};
+\end{tikzpicture}
+
+\vspace{0.2cm}
+{\small\textit{Figure~3: Area decomposition: sector (blue) minus triangle (pink).}}
+\end{center}
+
+\vspace{0.3cm}
+\noindent
+\textbf{Sector $CAP'$:} radius $a$, angle $E$, area $= \tfrac{1}{2}a^2 E$.
+
+\noindent
+\textbf{Triangle $CFP'$:} base $|CF| = ae$, height $P'N = a\sin E$,
+area $= \tfrac{1}{2}a^2 e\sin E$.
+
+\noindent
+\textbf{Why sector minus triangle?}  The swept area is measured from the focus $F$,
+not the centre $C$. Since $F$ is displaced from $C$ by $ae$, the triangle $CFP'$
+lies inside the sector but outside the region swept from $F$; subtracting it gives
+the correct area.
+
+\noindent The swept area in the auxiliary circle is:
+\[
+  A_{\text{circle}} = \tfrac{1}{2}a^2 E - \tfrac{1}{2}a^2 e\sin E
+                    = \frac{a^2}{2}(E - e\sin E).
+\]
+
+\subsection{Scaling Back to the Ellipse}
+
+Applying relation (2):
+\[
+  A = \frac{b}{a} \cdot \frac{a^2}{2}(E - e\sin E)
+    = \frac{ab}{2}(E - e\sin E). \tag{3}
+\]
+\newpage
+\subsection{Equating Both Expressions}
+
+Expressions (1) and (3) both equal the swept area $A$. Setting them equal and
+cancelling $\tfrac{ab}{2}$:
+
+\vspace{-0.4cm}
+\begin{keyeq}
+\boxed{M = E - e\sin E}
+\end{keyeq}
+\vspace{0.2cm}
+\noindent
+
+This is \textbf{Kepler's Equation}.\hfill$\blacksquare$
+
+\vspace{0.4cm}
+\begin{notebox}{Important: Angles Must Be in Radians}
+The sector area formula $\tfrac{1}{2}a^2 E$ is valid only when $E$ is in
+\textbf{radians}. Both $E$ and $M$ must be in radians; using degrees introduces
+a spurious factor of $\pi/180$.
+\end{notebox}
+
+% ================================================================
+\section{From Eccentric to True Anomaly}
+% ================================================================
+
+Kepler's Equation yields $E$ from $M$. We still need to convert $E$ into the
+physically meaningful true anomaly $\nu$ and the radial distance $r$.
+
+\subsection{Coordinate Relations}
+
+A point $P$ on the ellipse has parametric coordinates from centre $C$:
+\[
+  x = a\cos E, \qquad y = b\sin E.
+\]
+In polar form $(r,\nu)$ from focus $F$ (offset from $C$ by $ae$):
+\[
+  x = r\cos\nu + ae, \qquad y = r\sin\nu.
+\]
+
+\subsection{Radial Distance}
+
+Equating both expressions and eliminating $b$ via $b^2 = a^2(1-e^2)$:
+\[
+  \boxed{r = a\,(1 - e\cos E)}.
+\]
+Equivalently in terms of $\nu$:
+\[
+  r = \frac{a(1-e^2)}{1 + e\cos\nu}.
+\]
+
+\subsection{Half-Angle Conversion}
+
+From the $x$-expressions with $r = a(1-e\cos E)$:
+$\cos E = (e + \cos\nu)/(1 + e\cos\nu)$.
+Applying the half-angle tangent identity:
+\[
+  \boxed{\tan\frac{E}{2} \;=\; \sqrt{\frac{1-e}{1+e}}\;\tan\frac{\nu}{2}}.
+\]
+This is strictly monotone on $[0, 2\pi]$: each $E$ gives a unique $\nu$.
+
+\vspace{0.4cm}
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{llll}
+  \toprule
+  \textbf{Anomaly} & $x$ \textbf{from} $C$ & $x$ \textbf{from} $F$ & $y$ \\
+  \midrule
+  True ($\nu$)    & $r\cos\nu$  & $r\cos\nu - ae$  & $r\sin\nu$ \\
+  Eccentric ($E$) & $a\cos E$   & $a(\cos E - e)$  & $b\sin E$  \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+% ================================================================
+\section{Understanding and Visualising Kepler's Equation}
+% ================================================================
+
+\subsection{What Does Kepler's Equation Actually Tell Us?}
+
+Kepler's Equation $M = E - e\sin E$ cannot be solved algebraically for $E$ given
+$M$. This is because $E$ appears both inside and outside the sine function --- the
+equation is \textbf{transcendental}. Kepler himself recognised this and spent years
+searching for a closed-form solution, eventually concluding that none existed.
+
+Since no formula gives $E$ directly from $M$, we must rely on \textbf{numerical
+methods}: iterative procedures that start with an approximate value and improve it
+step by step until the result is accurate to any desired precision.
+
+The solution chain from time to position is therefore:
+\[
+  t
+  \;\xrightarrow{M = 2\pi t/T}\;
+  M
+  \;\xrightarrow{M = E - e\sin E}\;
+  E
+  \;\xrightarrow{\tan(E/2) = \cdots}\;
+  \nu
+  \;\xrightarrow{r = a(1-e\cos E)}\;
+  (r,\,\nu).
+\]
+Steps 1, 3, and 4 are direct arithmetic. Only Step~2 requires iteration.
+
+\subsection{The Geometric Meaning: $M$, $E$, and $\nu$ as Angles on the Same Orbit}
+
+Figure~4 shows how $M$, $E$, and $\nu$ relate to each other geometrically for
+a single orbit position. The key insight is:
+
+\begin{itemize}
+  \item $M$ is where a \emph{fictitious} body would be, moving at constant speed
+        on the auxiliary circle.
+  \item $E$ is the angle to the projection $P'$ of the real body onto the
+        auxiliary circle, measured at the centre $C$.
+  \item $\nu$ is the angle to the real body $P$, measured at the focus $F$.
+\end{itemize}
+
+For a circular orbit ($e = 0$) all three are identical at all times. For an
+elliptical orbit, they diverge: near periapsis the planet moves faster than the
+fictitious body ($\nu > M$), and near apoapsis it moves slower ($\nu < M$).
+Kepler's Equation quantifies exactly this departure.
+
+\vspace{0.4cm}
+\begin{center}
+\begin{tikzpicture}[scale=1.1]
+  \coordinate (C)   at (0,      0);
+  \coordinate (F)   at (-1.925, 0);
+  \coordinate (Per) at (3.5,    0);
+  \coordinate (Pp)  at (2.250,  2.681);
+  \coordinate (P)   at (2.250,  2.247);
+  \coordinate (Mb)  at (3.150,  1.525);
+
+  \draw[->, gray!50] (-5.6,0)   -- (4.2,0)   node[right,font=\small]{$x$};
+  \draw[->, gray!50] (-1.925,-3.2)--(-1.925,3.5) node[above,font=\small]{};
+
+  \draw[thick, blue]     (C) ellipse [x radius=3.5, y radius=2.934];
+  \draw[dashed, gray!60] (C) circle  [radius=3.5];
+
+  \draw[thick, green!50!black] (C) -- (Mb);
+  \draw[thick, blue!55]        (C) -- (Pp);
+  \draw[thick, red!80]         (F) -- (P);
+  \draw[dashed, gray!40]       (Pp) -- (2.250,0);
+
+  \fill[orange]          (F)   circle (2.5pt) node[below,       font=\small]{$F$};
+  \fill[black]           (C)   circle (2pt)   node[below left,  font=\small]{$C$};
+  \fill[green!50!black]  (Mb)  circle (2.5pt) node[right,       font=\small]{$M$-body};
+  \fill[blue!65]         (Pp)  circle (2.5pt) node[above right, font=\small]{$P'$};
+  \fill[red!80]          (P)   circle (2.5pt) node[right,       font=\small]{$P$};
+  \fill[black]           (Per) circle (1.8pt) node[below right, font=\small]{Periapsis};
+
+  \draw[->, green!50!black, thick] (0.8,0)
+      arc [start angle=0, end angle=25.86, radius=0.8];
+  \node[green!50!black, font=\small] at (11:1.4) {$M$};
+
+  \draw[->, blue!55, thick] (1.05,0)
+      arc [start angle=0, end angle=50, radius=1.05];
+  \node[blue!55, font=\small] at (35:1.4) {$E$};
+
+  \draw[->, red!80, thick]
+      ($( F)+(1.0,0)$) arc [start angle=0, end angle=29.5, radius=1.0];
+  \node[red!80, font=\small] at ($( F)+(18:1.4)$) {$\nu$};
+
+  \node[font=\small, align=center] at (0,-4)
+      {Near periapsis: $\nu > E > M$};
+\end{tikzpicture}
+
+\vspace{0.2cm}
+{\small\textit{Figure~4: Geometric comparison of $M$ (green), $E$ (blue), and $\nu$
+(red) at the same orbital position near periapsis. The real body $P$ is ahead of
+both the $E$-projection and the mean-motion body.}}
+\end{center}
+\newpage 
+% ================================================================
+\section{Numerical Methods for Solving Kepler's Equation}
+% ================================================================
+
+\subsection{Why No Closed Form Exists}
+
+The equation $M = E - e\sin E$ is called \textbf{transcendental}: $E$ appears both
+as a plain number and hidden inside $\sin E$ at the same time. No matter how cleverly
+you rearrange it, you cannot write $E$ directly as a formula in $M$ and $e$. Kepler
+himself spent years trying and gave up. This is not a gap in our knowledge --- it is
+a proven mathematical impossibility.
+
+What we can do instead is \emph{guess} a value of $E$, check how far off it is, and
+correct it. We repeat this until the answer is as accurate as we need. These
+step-by-step correction procedures are called \textbf{numerical methods}\footnote{For a deep dive in numerical methods, watch this playlist by Jeffrey Chasnov. (\hyperlink{https://youtube.com/playlist?list=PLkZjai-2Jcxn35XnijUtqqEg0Wi5Sn8ab&si=vtjDXGNt5P7oDNnd}{link})}. The good news is that Kepler's equation always has \emph{exactly one} answer (because the
+left-hand side grows faster than the right-hand side for any $e < 1$), so every
+reasonable method will eventually find it. 
+
+\subsection{Method 1: Fixed-Point Iteration}
+
+The idea is beautifully simple. Rewrite Kepler's equation by moving $e\sin E$ to the
+right:
+\[
+  E = M + e\sin E.
+\]
+This says: ``the answer $E$ equals $M$ plus a small correction $e\sin E$.''  We use
+this as a recipe. Start with the guess $E_0 = M$ (pretend the correction is zero),
+then keep plugging the current value back in:
+
+\begin{keyeq}
+  $E_{n+1} = M + e\sin E_n$
+\end{keyeq}
+
+Each step, the correction gets better. This works because the correction term
+$e\sin E$ is always smaller than $e < 1$ times the current error, so the error
+shrinks by a factor of roughly $e$ every step. For planets with small eccentricity
+this is very fast; for highly elongated orbits it takes more steps.
+\newpage 
+
+\begin{notebox}{Quick Example --- Fixed-Point}
+Earth: $e = 0.0167$, $M = 1.0\,\text{rad}$.
+\begin{align*}
+  E_0 &= 1.0000 \\
+  E_1 &= 1.0 + 0.0167 \times \sin(1.0) = 1.0 + 0.0167 \times 0.8415 = 1.01405 \\
+  E_2 &= 1.0 + 0.0167 \times \sin(1.01405) \approx 1.01406
+\end{align*}
+Two steps give six-digit accuracy. The correction is tiny because Earth's orbit is
+nearly circular.
+\end{notebox}
+
+\subsection{Method 2: Newton--Raphson Method}
+
+Fixed-point iteration is fine for nearly circular orbits, but it slows down when $e$
+is large. The Newton--Raphson method is smarter: instead of just applying the
+correction blindly, it looks at \emph{how steeply} the equation is changing and
+adjusts the step size accordingly. The idea is to draw a tangent line to the error
+curve and find where that line crosses zero --- that crossing is a much better next
+guess.
+
+Define the ``error'' at a given guess as $f(E) = E - e\sin E - M$. We want $f(E) = 0$.
+The Newton--Raphson update is:
+
+\begin{keyeq}
+  $\displaystyle E_{n+1} = E_n - \frac{E_n - e\sin E_n - M}{1 - e\cos E_n}$
+\end{keyeq}
+
+The numerator is the current error; the denominator is the slope of $f$ at $E_n$.
+Dividing by the slope scales the correction to the right size. The result is that
+the number of accurate decimal digits \emph{doubles} with every step --- this is
+called quadratic convergence, and it is far faster than fixed-point iteration.
+
+\begin{notebox}{Quick Example --- Newton--Raphson}
+Same case: $e = 0.0167$, $M = 1.0\,\text{rad}$, start with $E_0 = 1.0$.
+\[
+  E_1 = 1.0 - \frac{1.0 - 0.0167\sin(1.0) - 1.0}{1 - 0.0167\cos(1.0)}
+      = 1.0 - \frac{-0.01405}{0.9991} \approx 1.01406.
+\]
+One single step reaches the same accuracy that fixed-point needed two steps for ---
+and for a high-eccentricity orbit the gap would be far more dramatic.
+\end{notebox}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{lll}
+  \toprule
+  \textbf{Method} & \textbf{Speed} & \textbf{Best used for} \\
+  \midrule
+  Fixed-point    & Error $\times\,e$ per step (linear)   & Low-eccentricity orbits ($e < 0.3$) \\
+  Newton--Raphson & Digits double per step (quadratic)    & All orbits; standard choice \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{notebox}{Practical Guidelines}
+\begin{itemize}
+  \item Both methods require $E$ and $M$ in \textbf{radians}, not degrees.
+  \item A good starting guess is always $E_0 = M$. For very eccentric orbits
+        ($e > 0.8$), starting with $E_0 = \pi$ avoids occasional slow convergence.
+  \item Newton--Raphson is the standard choice in real astronomical software. It
+        converges to full computer precision in 3--5 iterations for any physically
+        meaningful orbit.
+\end{itemize}
+\end{notebox}
+
+\subsection{A Short Worked Example: Finding a Planet's Position}
+
+An exoplanet has eccentricity $e = 0.30$ and period $T = 2.0$ years.
+Find its eccentric anomaly $0.5$ years after periapsis.
+
+\textbf{Step 1 --- Mean anomaly:}
+\[
+  M = \frac{2\pi}{T} \times t = \frac{2\pi}{2.0} \times 0.5 = \frac{\pi}{2}
+    \approx 1.5708\,\text{rad}.
+\]
+
+\textbf{Step 2 --- Newton--Raphson} (two steps from $E_0 = M = 1.5708$):
+\[
+  E_1 = 1.5708 - \frac{1.5708 - 0.30\sin(1.5708) - 1.5708}{1 - 0.30\cos(1.5708)}
+      = 1.5708 - \frac{-0.3000}{1.000} = 1.8708\,\text{rad}.
+\]
+\[
+  E_2 = 1.8708 - \frac{1.8708 - 0.30\sin(1.8708) - 1.5708}{1 - 0.30\cos(1.8708)}
+      = 1.8708 - \frac{0.0263}{1.0592} \approx 1.8460\,\text{rad}.
+\]
+\[
+  E_3 \approx 1.8453\,\text{rad} \quad\text{(converged to four decimal places)}.
+\]
+
+\textbf{Step 3 --- True anomaly:}
+\[
+  \tan\frac{\nu}{2} = \sqrt{\frac{1+0.30}{1-0.30}}\,\tan\frac{1.8453}{2}
+                    = \sqrt{1.857} \times \tan(0.9227) \approx 1.363 \times 1.297
+                    \approx 1.768,
+\]
+\[
+  \frac{\nu}{2} \approx 60.5^\circ \quad\Rightarrow\quad \nu \approx 121^\circ.
+\]
+
+\textbf{Step 4 --- Heliocentric distance} (taking $a = 1$ for simplicity):
+\[
+  r = a(1 - e\cos E) = 1 - 0.30\cos(1.8453) \approx 1 - 0.30\times(-0.2756)
+    \approx 1.083\,a.
+\]
+The planet is about $8\%$ farther from its star than the semi-major axis, which makes
+sense: at a true anomaly of $121^\circ$ it has moved well past the halfway point of
+its orbit and is receding toward apoapsis.
+
+
+% ================================================================
+%  PROBLEMS
+% ================================================================
+
+\section*{Problems}
+\addcontentsline{toc}{section}{Problems}
+
+% ------------------------------------------------------------------
+\begin{probbox}{5 points}{1. A Simple Circular Check}
+A planet moves in a perfectly circular orbit with eccentricity $e = 0$ and period
+$T = 1\,\text{year}$.
+\begin{enumerate}
+  \item[(a)] Find the mean anomaly $M$ exactly 3 months after periapsis.
+             Give your answer in both radians and degrees.
+  \item[(b)] State the eccentric anomaly $E$ without any iteration.
+             Explain why no iteration is needed.
+  \item[(c)] What is the true anomaly $\nu$, and where is the planet on its orbit?
+\end{enumerate}
+
+\medskip
+\textbf{\color{blue!60!black}Answer.}
+
+\textbf{(a)} Three months is one quarter of the period, so
+\begin{equation*}
+  M \;=\; \frac{2\pi}{T}\,t \;=\; \frac{2\pi}{1}\times\frac{1}{4}
+        \;=\; \frac{\pi}{2} \;\approx\; 1.571\,\text{rad} \;=\; 90^\circ.
+\end{equation*}
+
+\textbf{(b)} Setting $e = 0$ in Kepler's equation gives $M = E - 0\cdot\sin E = E$,
+so $E = \pi/2$ exactly. No iteration is needed because for a circular orbit the
+equation is already solved --- $M$, $E$, and $\nu$ are all identical at every point.
+
+\textbf{(c)} The half-angle formula with $e = 0$ gives
+$\tan(\nu/2) = \tan(E/2)$, hence $\nu = E = 90^\circ$.
+The planet is exactly one quarter of the way around its orbit, at the tip of the
+semi-minor axis, equidistant from periapsis and apoapsis.
+\end{probbox}
+
+\vspace{0.6cm}
+
+% ------------------------------------------------------------------
+\begin{probbox}{10 points}{2. Mars at Opposition}
+Mars has eccentricity $e = 0.093$, period $T = 686.97\,\text{days}$, and
+semi-major axis $a = 1.524\,\text{au}$. Assume Mars was at perihelion on
+1 January 2023. The Mars opposition of 13 October 2023 occurred 285 days after
+perihelion.
+\begin{enumerate}
+  \item[(a)] Find the mean anomaly $M$ of Mars on 13 October 2023.
+  \item[(b)] Use two Newton--Raphson iterations (starting from $E_0 = M$) to find
+             the eccentric anomaly $E$ to four decimal places.
+  \item[(c)] Convert $E$ to true anomaly $\nu$.
+  \item[(d)] Find Mars's distance from the Sun on that date.
+  \item[(e)] Is the October 2023 opposition favourable for observation? Justify
+             briefly by comparing $r$ with the perihelion and aphelion distances.
+\end{enumerate}
+
+\medskip
+\textbf{\color{blue!60!black}Answer.}
+
+\textbf{(a)}
+\begin{equation*}
+  M \;=\; \frac{2\pi \times 285}{686.97} \;\approx\; 2.6079\,\text{rad}
+        \;\approx\; 149.4^\circ.
+\end{equation*}
+
+\textbf{(b)} Newton--Raphson with $E_0 = 2.6079$:
+\begin{align*}
+  E_1 &= 2.6079 - \frac{2.6079 - 0.093\sin(2.6079) - 2.6079}{1 - 0.093\cos(2.6079)}
+       = 2.6079 - \frac{-0.0465}{1.0793} \approx 2.6510,\\[4pt]
+  E_2 &= 2.6510 - \frac{2.6510 - 0.093\sin(2.6510) - 2.6079}{1 - 0.093\cos(2.6510)}
+       \approx 2.6510 - \frac{0.0003}{1.0804} \approx 2.6507.
+\end{align*}
+Converged value: $E \approx 2.6507\,\text{rad}$.
+
+\textbf{(c)} Using the half-angle formula:
+\begin{equation*}
+  \tan\frac{\nu}{2}
+    = \sqrt{\frac{1+0.093}{1-0.093}}\,\tan\!\left(\frac{2.6507}{2}\right)
+    = \sqrt{1.205}\times\tan(1.3254)
+    \approx 1.098\times 4.018
+    \approx 4.412,
+\end{equation*}
+\begin{equation*}
+  \nu \approx 2\arctan(4.412) \approx 154.3^\circ.
+\end{equation*}
+
+\textbf{(d)}
+\begin{equation*}
+  r = a\,(1 - e\cos E)
+    = 1.524\times\bigl(1 - 0.093\times\cos(2.6507)\bigr) 
+    \end{equation*}
+\begin{equation*}
+    = 1.524\times\bigl(1 + 0.093\times 0.877\bigr)
+    \approx 1.648\,\text{au}.
+\end{equation*}
+
+\textbf{(e)} Perihelion distance: $a(1-e) = 1.524\times 0.907 = 1.382\,\text{au}$.
+Aphelion distance: $a(1+e) = 1.524\times 1.093 = 1.666\,\text{au}$.
+At $r \approx 1.648\,\text{au}$, Mars is very close to aphelion, making this
+opposition \emph{unfavourable} --- Mars is nearly as far from Earth as possible.
+The best oppositions occur when Mars is near perihelion (around August--September).
+\end{probbox}
+
+\vspace{0.6cm}
+
+% ------------------------------------------------------------------
+\begin{probbox}{15 points}{3. Comet Time of Flight}
+A comet has semi-major axis $a = 10\,\text{au}$ and eccentricity $e = 0.80$.
+It is observed at true anomaly $\nu_1 = 60^\circ$, and observed again at
+$\nu_2 = 240^\circ$.
+Use $G = 6.67\times10^{-11}\,\text{N\,m}^2\,\text{kg}^{-2}$,
+$M_\odot = 2.0\times10^{30}\,\text{kg}$, and
+$1\,\text{au} = 1.496\times10^{11}\,\text{m}$.
+\begin{enumerate}
+  \item[(a)] Convert $\nu_1$ and $\nu_2$ to eccentric anomalies $E_1$ and $E_2$.
+  \item[(b)] Find the mean anomalies $M_1$ and $M_2$.
+  \item[(c)] Find the orbital period $T$.
+  \item[(d)] Find the time elapsed between the two observations.
+  \item[(e)] Find the comet's distance from the Sun at each observation.
+             At which point is it moving faster, and why?
+\end{enumerate}
+
+\medskip
+\textbf{\color{blue!60!black}Answer.}
+
+\textbf{(a)} The conversion factor is
+\begin{equation*}
+  k = \sqrt{\frac{1-e}{1+e}} = \sqrt{\frac{0.20}{1.80}} \approx 0.3333.
+\end{equation*}
+For $\nu_1 = 60^\circ$:
+\begin{equation*}
+  \tan\frac{E_1}{2} = 0.3333\times\tan 30^\circ = 0.3333\times 0.5774 = 0.1925
+  \;\Rightarrow\; E_1 \approx 21.8^\circ \approx 0.3802\,\text{rad}.
+\end{equation*}
+For $\nu_2 = 240^\circ$, we have $\tan 120^\circ = -\sqrt{3}$, and since
+$\nu_2 > 180^\circ$ the comet is past apoapsis, placing $E_2$ in the range
+$(180^\circ, 360^\circ)$:
+\begin{equation*}
+  \tan\frac{E_2}{2} = 0.3333\times(-\sqrt{3}) = -0.5774
+  \;\Rightarrow\; E_2 \approx 300^\circ \approx 5.2360\,\text{rad}.
+\end{equation*}
+
+\textbf{(b)} Applying Kepler's equation $M = E - e\sin E$:
+\begin{align*}
+  M_1 &= 0.3802 - 0.80\times\sin(0.3802)
+       = 0.3802 - 0.80\times 0.3714
+       = 0.0831\,\text{rad},\\[4pt]
+  M_2 &= 5.2360 - 0.80\times\sin(5.2360)
+       = 5.2360 - 0.80\times(-0.8660)
+       = 5.9288\,\text{rad}.
+\end{align*}
+
+\textbf{(c)} Converting the semi-major axis:
+$a = 10\times 1.496\times10^{11} = 1.496\times10^{12}\,\text{m}$.
+\begin{equation*}
+  T = 2\pi\sqrt{\frac{a^3}{GM_\odot}}
+    = 2\pi\sqrt{\frac{(1.496\times10^{12})^3}{6.67\times10^{-11}\times 2.0\times10^{30}}}
+    \approx 2\pi \times 1.584\times10^{8}\,\text{s}
+    \approx 31.6\,\text{years}.
+\end{equation*}
+
+\textbf{(d)}
+\begin{equation*}
+  \Delta t = \frac{M_2 - M_1}{2\pi}\times T
+           = \frac{5.9288 - 0.0831}{6.2832}\times 31.6
+           = 0.930 \times 31.6
+           \approx 29.4\,\text{years}.
+\end{equation*}
+
+\textbf{(e)}
+\begin{align*}
+  r_1 &= a(1 - e\cos E_1)
+       = 10\,(1 - 0.80\times\cos 21.8^\circ)
+       = 10\,(1 - 0.80\times 0.929)
+       = 2.57\,\text{au},\\[4pt]
+  r_2 &= a(1 - e\cos E_2)
+       = 10\,(1 - 0.80\times\cos 300^\circ)
+       = 10\,(1 - 0.80\times 0.500)
+       = 6.00\,\text{au}.
+\end{align*}
+The comet moves faster at the first observation ($r_1 = 2.57\,\text{au}$) because
+it is closer to the Sun. By Kepler's second law, the radius vector sweeps equal
+areas in equal times, so the speed must be higher when the distance is smaller.
+\end{probbox}
+
+\subsection*{For further exploration:}
+1) A Textbook on Spherical Astronomy by W. M. Smart \href{https://archive.org/details/dli.ernet.240942/page/98/mode/2up}{(Chapter V)} \\
+2) This YouTube video by Welch Labs: \href{https://www.youtube.com/watch?v=hBkmyJ3TE0g}{Kepler’s Impossible Equation}
+
+\vfill
+\doclicenseThis
+\end{document}
